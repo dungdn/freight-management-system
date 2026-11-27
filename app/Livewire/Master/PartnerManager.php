@@ -13,6 +13,7 @@ use App\Models\PartnerRole;
 use App\Models\PaymentTerm;
 use App\Support\Tenancy\TenantContext;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -31,6 +32,7 @@ class PartnerManager extends Component
     public bool $showDetailDrawer = false;
     public bool $isEditing = false;
     public ?int $selectedPartnerId = null;
+    public ?int $detailPartnerId = null;
 
     // Form inputs
     public string $partner_code = '';
@@ -40,8 +42,8 @@ class PartnerManager extends Component
     public string $tax_code = '';
     public string $registration_no = '';
     public string $website = '';
-    public ?int $default_currency_id = null;
-    public ?int $payment_term_id = null;
+    public $default_currency_id = null;
+    public $payment_term_id = null;
     public string $status = 'ACTIVE';
     public string $notes = '';
 
@@ -57,15 +59,12 @@ class PartnerManager extends Component
     // Primary Address inputs
     public string $address_line1 = '';
     public string $city = '';
-    public ?int $country_id = null;
+    public $country_id = null;
 
     // Credit Profile inputs
     public string $credit_limit = '';
-    public ?int $credit_currency_id = null;
-    public int $credit_days = 0;
-
-    // Detail view partner data
-    public ?BusinessPartner $detailPartner = null;
+    public $credit_currency_id = null;
+    public $credit_days = 0;
 
     // Available role constants
     public const AVAILABLE_ROLES = [
@@ -108,9 +107,9 @@ class PartnerManager extends Component
             'partner_kind' => 'required|in:ORGANIZATION,INDIVIDUAL',
             'tax_code' => 'nullable|string|max:40',
             'registration_no' => 'nullable|string|max:60',
-            'website' => 'nullable|url|max:255',
-            'default_currency_id' => 'nullable|exists:currencies,id',
-            'payment_term_id' => 'nullable|exists:payment_terms,id',
+            'website' => 'nullable|string|max:255',
+            'default_currency_id' => 'nullable',
+            'payment_term_id' => 'nullable',
             'status' => 'required|in:ACTIVE,INACTIVE,HOLD',
             'notes' => 'nullable|string|max:1000',
             'roles' => 'required|array|min:1',
@@ -119,7 +118,7 @@ class PartnerManager extends Component
             'contact_phone' => 'nullable|string|max:40',
             'address_line1' => 'nullable|string|max:200',
             'city' => 'nullable|string|max:100',
-            'country_id' => 'nullable|exists:countries,id',
+            'country_id' => 'nullable',
             'credit_limit' => 'nullable|numeric|min:0',
             'credit_days' => 'nullable|integer|min:0',
         ];
@@ -138,6 +137,24 @@ class PartnerManager extends Component
     public function updatingSelectedStatus(): void
     {
         $this->resetPage();
+    }
+
+    #[Computed]
+    public function detailPartner(): ?BusinessPartner
+    {
+        if (!$this->detailPartnerId) {
+            return null;
+        }
+
+        return BusinessPartner::with([
+            'defaultCurrency',
+            'paymentTerm',
+            'roles',
+            'contacts',
+            'addresses.country',
+            'activeCreditProfile.currency',
+            'salesAssignments.salesUser',
+        ])->find($this->detailPartnerId);
     }
 
     public function openCreate(): void
@@ -201,16 +218,7 @@ class PartnerManager extends Component
 
     public function openDetail(int $id): void
     {
-        $this->detailPartner = BusinessPartner::with([
-            'defaultCurrency',
-            'paymentTerm',
-            'roles',
-            'contacts',
-            'addresses.country',
-            'activeCreditProfile.currency',
-            'salesAssignments.salesUser',
-        ])->findOrFail($id);
-
+        $this->detailPartnerId = $id;
         $this->selectedPartnerId = $id;
         $this->showDetailDrawer = true;
     }
@@ -218,7 +226,7 @@ class PartnerManager extends Component
     public function closeDetailDrawer(): void
     {
         $this->showDetailDrawer = false;
-        $this->detailPartner = null;
+        $this->detailPartnerId = null;
     }
 
     public function closeModal(): void
@@ -232,7 +240,13 @@ class PartnerManager extends Component
         $this->validate();
         $companyId = TenantContext::getCompanyId();
 
-        DB::transaction(function () use ($companyId) {
+        $defaultCurrId = !empty($this->default_currency_id) ? (int) $this->default_currency_id : null;
+        $paymentTermId = !empty($this->payment_term_id) ? (int) $this->payment_term_id : null;
+        $countryId = !empty($this->country_id) ? (int) $this->country_id : null;
+        $creditCurrId = !empty($this->credit_currency_id) ? (int) $this->credit_currency_id : $defaultCurrId;
+        $creditDays = !empty($this->credit_days) ? (int) $this->credit_days : 0;
+
+        DB::transaction(function () use ($companyId, $defaultCurrId, $paymentTermId, $countryId, $creditCurrId, $creditDays) {
             $partnerData = [
                 'company_id' => $companyId,
                 'partner_code' => strtoupper(trim($this->partner_code)),
@@ -242,8 +256,8 @@ class PartnerManager extends Component
                 'tax_code' => trim($this->tax_code) ?: null,
                 'registration_no' => trim($this->registration_no) ?: null,
                 'website' => trim($this->website) ?: null,
-                'default_currency_id' => $this->default_currency_id,
-                'payment_term_id' => $this->payment_term_id,
+                'default_currency_id' => $defaultCurrId,
+                'payment_term_id' => $paymentTermId,
                 'status' => $this->status,
                 'notes' => trim($this->notes) ?: null,
             ];
@@ -286,7 +300,7 @@ class PartnerManager extends Component
             }
 
             // Save Primary Address if provided
-            if (!empty($this->address_line1) && $this->country_id) {
+            if (!empty($this->address_line1) && $countryId) {
                 PartnerAddress::updateOrCreate(
                     [
                         'company_id' => $companyId,
@@ -297,7 +311,7 @@ class PartnerManager extends Component
                         'address_type' => 'OFFICE',
                         'address_line1' => trim($this->address_line1),
                         'city' => trim($this->city) ?: null,
-                        'country_id' => $this->country_id,
+                        'country_id' => $countryId,
                         'is_active' => true,
                     ]
                 );
@@ -312,9 +326,9 @@ class PartnerManager extends Component
                         'is_active' => true,
                     ],
                     [
-                        'credit_limit' => $this->credit_limit ?: 0,
-                        'currency_id' => $this->credit_currency_id ?? $this->default_currency_id ?? 1,
-                        'credit_days' => $this->credit_days ?: 0,
+                        'credit_limit' => (float) $this->credit_limit,
+                        'currency_id' => $creditCurrId ?? 1,
+                        'credit_days' => $creditDays,
                         'effective_from' => now()->toDateString(),
                         'approved_by' => auth()->id(),
                         'approved_at' => now(),

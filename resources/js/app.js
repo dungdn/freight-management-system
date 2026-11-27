@@ -1,5 +1,5 @@
 import { createPopper } from "@popperjs/core";
-import Alpine from "alpinejs";
+import { Livewire, Alpine } from "../../vendor/livewire/livewire/dist/livewire.esm";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import "./bootstrap";
@@ -7,6 +7,7 @@ import initCharts from "./components/chart";
 import registerUi from "./ui";
 
 window.Alpine = Alpine;
+window.Livewire = Livewire;
 window.createPopper = createPopper;
 window.flatpickr = flatpickr;
 
@@ -77,7 +78,7 @@ Alpine.store("direction", {
 });
 
 
-Alpine.start();
+Livewire.start();
 
 
 // Initialize components on DOM ready

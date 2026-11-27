@@ -244,7 +244,9 @@
 
     <!-- Create / Edit Partner Modal -->
     @if ($showFormModal)
-        <div class="fixed inset-0 z-999 flex items-center justify-center overflow-y-auto bg-gray-900/60 p-4 backdrop-blur-xs">
+        <div class="fixed inset-0 z-999 flex items-center justify-center overflow-y-auto bg-gray-900/60 p-4 backdrop-blur-xs"
+             @keydown.escape.window="$wire.closeModal()"
+             @click.self="$wire.closeModal()">
             <div class="relative w-full max-w-3xl rounded-2xl bg-white p-6 shadow-xl dark:bg-gray-900 dark:border dark:border-gray-800 max-h-[90vh] overflow-y-auto">
                 <!-- Modal Header -->
                 <div class="flex items-center justify-between border-b border-gray-100 pb-4 dark:border-gray-800">
@@ -449,20 +451,22 @@
     @endif
 
     <!-- Detail Slide-Over Drawer -->
-    @if ($showDetailDrawer && $detailPartner)
-        <div class="fixed inset-0 z-999 flex justify-end bg-gray-900/40 backdrop-blur-xs">
+    @if ($showDetailDrawer && $this->detailPartner)
+        <div class="fixed inset-0 z-999 flex justify-end bg-gray-900/40 backdrop-blur-xs"
+             @keydown.escape.window="$wire.closeDetailDrawer()"
+             @click.self="$wire.closeDetailDrawer()">
             <div class="h-full w-full max-w-lg bg-white p-6 shadow-2xl dark:bg-gray-900 dark:border-s dark:border-gray-800 overflow-y-auto">
                 <!-- Drawer Header -->
                 <div class="flex items-start justify-between border-b border-gray-100 pb-4 dark:border-gray-800">
                     <div>
                         <span class="inline-block rounded-full bg-brand-50 px-2.5 py-0.5 text-[11px] font-semibold text-brand-600 dark:bg-brand-500/10 dark:text-brand-400">
-                            {{ $detailPartner->partner_code }}
+                            {{ $this->detailPartner->partner_code }}
                         </span>
                         <h3 class="mt-1 text-base font-bold text-gray-800 dark:text-white/90">
-                            {{ $detailPartner->legal_name }}
+                            {{ $this->detailPartner->legal_name }}
                         </h3>
-                        @if($detailPartner->display_name)
-                            <p class="text-xs text-gray-500 dark:text-gray-400">Trade: {{ $detailPartner->display_name }}</p>
+                        @if($this->detailPartner->display_name)
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Trade: {{ $this->detailPartner->display_name }}</p>
                         @endif
                     </div>
                     <button wire:click="closeDetailDrawer" class="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-800">
@@ -476,19 +480,19 @@
                     <div class="grid grid-cols-2 gap-3 rounded-xl border border-gray-100 bg-gray-50/70 p-3.5 dark:border-gray-800 dark:bg-white/[0.02]">
                         <div>
                             <span class="text-gray-500 dark:text-gray-400">Status</span>
-                            <p class="mt-0.5 font-bold text-emerald-600 dark:text-emerald-400">{{ $detailPartner->status }}</p>
+                            <p class="mt-0.5 font-bold text-emerald-600 dark:text-emerald-400">{{ $this->detailPartner->status }}</p>
                         </div>
                         <div>
                             <span class="text-gray-500 dark:text-gray-400">Partner Kind</span>
-                            <p class="mt-0.5 font-medium text-gray-800 dark:text-white">{{ $detailPartner->partner_kind }}</p>
+                            <p class="mt-0.5 font-medium text-gray-800 dark:text-white">{{ $this->detailPartner->partner_kind }}</p>
                         </div>
                         <div>
                             <span class="text-gray-500 dark:text-gray-400">Tax Code</span>
-                            <p class="mt-0.5 font-mono text-gray-800 dark:text-white">{{ $detailPartner->tax_code ?: 'N/A' }}</p>
+                            <p class="mt-0.5 font-mono text-gray-800 dark:text-white">{{ $this->detailPartner->tax_code ?: 'N/A' }}</p>
                         </div>
                         <div>
                             <span class="text-gray-500 dark:text-gray-400">Default Currency</span>
-                            <p class="mt-0.5 font-semibold text-gray-800 dark:text-white">{{ $detailPartner->defaultCurrency?->code ?: 'USD' }}</p>
+                            <p class="mt-0.5 font-semibold text-gray-800 dark:text-white">{{ $this->detailPartner->defaultCurrency?->code ?: 'USD' }}</p>
                         </div>
                     </div>
 
@@ -496,7 +500,7 @@
                     <div>
                         <h4 class="mb-2 font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">Assigned Roles</h4>
                         <div class="flex flex-wrap gap-1.5">
-                            @foreach ($detailPartner->roles as $role)
+                            @foreach ($this->detailPartner->roles as $role)
                                 <span class="rounded bg-brand-50 px-2 py-0.5 text-xs font-semibold text-brand-600 dark:bg-brand-500/10 dark:text-brand-400">
                                     {{ $role->role_code }}
                                 </span>
@@ -507,7 +511,7 @@
                     <!-- Primary Contact -->
                     <div>
                         <h4 class="mb-2 font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">Contacts</h4>
-                        @forelse ($detailPartner->contacts as $contact)
+                        @forelse ($this->detailPartner->contacts as $contact)
                             <div class="rounded-xl border border-gray-100 p-3 dark:border-gray-800 mb-2">
                                 <div class="flex justify-between items-center">
                                     <p class="font-bold text-gray-800 dark:text-white">{{ $contact->full_name }}</p>
@@ -526,7 +530,7 @@
                     <!-- Addresses -->
                     <div>
                         <h4 class="mb-2 font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">Addresses</h4>
-                        @forelse ($detailPartner->addresses as $addr)
+                        @forelse ($this->detailPartner->addresses as $addr)
                             <div class="rounded-xl border border-gray-100 p-3 dark:border-gray-800 mb-2">
                                 <span class="text-[11px] font-semibold text-brand-600 dark:text-brand-400">{{ $addr->address_type }}</span>
                                 <p class="mt-1 text-gray-800 dark:text-white">{{ $addr->address_line1 }}</p>
@@ -540,17 +544,17 @@
                     <!-- Credit Profile -->
                     <div>
                         <h4 class="mb-2 font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">Credit & Risk Profile</h4>
-                        @if ($detailPartner->activeCreditProfile)
+                        @if ($this->detailPartner->activeCreditProfile)
                             <div class="rounded-xl border border-emerald-200/60 bg-emerald-50/40 p-3.5 dark:border-emerald-900/30 dark:bg-emerald-950/10">
                                 <div class="flex justify-between">
                                     <span class="text-gray-600 dark:text-gray-400">Approved Credit Limit</span>
                                     <span class="font-bold text-emerald-700 dark:text-emerald-400">
-                                        {{ number_format($detailPartner->activeCreditProfile->credit_limit) }} {{ $detailPartner->activeCreditProfile->currency?->code }}
+                                        {{ number_format($this->detailPartner->activeCreditProfile->credit_limit) }} {{ $this->detailPartner->activeCreditProfile->currency?->code }}
                                     </span>
                                 </div>
                                 <div class="flex justify-between mt-1">
                                     <span class="text-gray-600 dark:text-gray-400">Payment Days</span>
-                                    <span class="font-semibold text-gray-800 dark:text-white">{{ $detailPartner->activeCreditProfile->credit_days }} days</span>
+                                    <span class="font-semibold text-gray-800 dark:text-white">{{ $this->detailPartner->activeCreditProfile->credit_days }} days</span>
                                 </div>
                             </div>
                         @else
@@ -561,7 +565,7 @@
 
                 <!-- Drawer Footer Actions -->
                 <div class="mt-6 flex items-center gap-2 border-t border-gray-100 pt-4 dark:border-gray-800">
-                    <button wire:click="openEdit({{ $detailPartner->id }})"
+                    <button wire:click="openEdit({{ $this->detailPartner->id }})"
                         class="flex-1 rounded-lg bg-brand-500 py-2 text-center text-xs font-semibold text-white hover:bg-brand-600 transition">
                         Edit Partner
                     </button>
