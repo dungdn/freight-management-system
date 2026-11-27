@@ -73,4 +73,12 @@ return [
         'title' => 'Laravel Videos | TailAdmin - Laravel Dashboard Template',
         'description' => 'This is Laravel Videos page for TailAdmin - Laravel Tailwind CSS Admin Dashboard Template',
     ],
+    '/master/partners' => [
+        'title' => 'Business Partners Directory | Cargo FMS',
+        'description' => 'Comprehensive master directory for Customers, Shippers, Consignees, Carriers, and Overseas Agents.',
+    ],
+    '/sales/quotations' => [
+        'title' => 'Freight Quotations & Sales Orders | Cargo FMS',
+        'description' => 'Generate multi-currency freight quotations and convert directly into Sales Orders and Shipments.',
+    ],
 ];

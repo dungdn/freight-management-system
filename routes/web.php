@@ -30,7 +30,7 @@ Route::get('/analytics', $fmsModule('Operations & Freight Analytics', 'Volume, r
 // Sales & CRM
 Route::prefix('sales')->name('sales.')->group(function () use ($fmsModule) {
     Route::get('/inquiries', $fmsModule('Customer Inquiries', 'Capture and track shipper freight inquiries across Ocean, Air, and Haulage modes.', ['business_partners', 'numbering_sequences', 'locations']))->name('inquiries');
-    Route::get('/quotations', $fmsModule('Freight Quotations', 'Generate multi-currency quotations with buy/sell rates and customer validity terms.', ['business_partners', 'charge_codes', 'exchange_rates']))->name('quotations');
+    Route::get('/quotations', fn () => view('pages.sales.quotations.index', ['title' => 'Freight Quotations']))->name('quotations');
     Route::get('/orders', $fmsModule('Sales Orders', 'Confirmed freight bookings and sales orders ready for operations turnover.', ['business_partners', 'service_types', 'payment_terms']))->name('orders');
 });
 
