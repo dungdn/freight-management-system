@@ -33,6 +33,10 @@ return [
         'title' => 'Laravel Calender | TailAdmin - Laravel Dashboard Template',
         'description' => 'This is Laravel Calender page for TailAdmin Tailwind CSS Admin Dashboard Template',
     ],
+    '/dashboard' => [
+        'title' => 'Freight Operations Overview | Cargo FMS',
+        'description' => 'Cargo FMS Freight Forwarding & Logistics Operations Management Platform',
+    ],
     '/ecommerce' => [
         'title' => 'Laravel E-commerce Dashboard | TailAdmin - Laravel Dashboard Template',
         'description' => 'This is Laravel Home for TailAdmin Dashboard Template',

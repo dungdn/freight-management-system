@@ -37,10 +37,10 @@
             </x-ui.button>
 
             <!-- Search (desktop only) -->
-            <div class="hidden xl:block" x-data="{}"
+            <div class="hidden xl:flex items-center gap-4" x-data="{}"
                 @keydown.window="if (($event.metaKey || $event.ctrlKey) && $event.key.toLowerCase() === 'k') { $event.preventDefault(); $refs.searchInput?.focus(); }">
                 <form @submit.prevent>
-                    <x-ui.field class="xl:w-107.5">
+                    <x-ui.field class="xl:w-96">
                         <x-ui.input-group class="border-gray-200 bg-transparent dark:border-gray-800 dark:bg-white/3">
                             <x-ui.input-group.addon align="inline-start">
                                 <x-svg.search class="size-5 text-gray-500 dark:text-gray-400" />
@@ -57,6 +57,12 @@
                         </x-ui.input-group>
                     </x-ui.field>
                 </form>
+
+                <!-- Active Branch Chip -->
+                <div class="hidden 2xl:flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-xs font-medium text-gray-700 dark:border-gray-800 dark:bg-white/3 dark:text-gray-300">
+                    <span class="size-2 rounded-full bg-brand-500"></span>
+                    <span>CARGO_VN · Head Office (SGN)</span>
+                </div>
             </div>
         </div>
 

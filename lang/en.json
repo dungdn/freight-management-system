@@ -123,13 +123,14 @@
             "inboxDetails": "Details"
         },
         "widget": {
-            "title": "#1 Tailwind CSS Dashboard",
-            "description": "Leading Tailwind CSS Admin Template with 500+ UI Component and Pages.",
-            "purchasePlan": "Purchase Plan"
+            "title": "Cargo FMS v1.1",
+            "description": "Freight Forwarding & Operations System",
+            "purchasePlan": "Purchase Plan",
+            "newShipment": "+ New Shipment"
         }
     },
     "header": {
-        "searchPlaceholder": "Search or type command...",
+        "searchPlaceholder": "Search Shipment No, HBL, Container or Partner... (⌘K)",
         "toggleSidebar": "Toggle Sidebar",
         "notifications": {
             "title": "Notification",
