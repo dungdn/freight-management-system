@@ -37,9 +37,11 @@ This is the migration order after the owner-approved decisions dated 2026-11-24.
 ## Review gate before first migration PR
 
 - [x] Owner decisions approved: company-owned partner master, global user identity, yearly numbering, Spatie Permission.
-- [ ] Remaining technical gates closed: MySQL release/collation, package version, email normalization, branch access semantics.
-- [ ] `05_CORE_MASTER_DATA_DETAILED_DESIGN.md` reviewed.
-- [ ] `06_CORE_MASTER_DATA_ERD.md` reviewed.
-- [x] RBAC package direction fixed: Spatie Permission Teams with company as team context; exact compatible version must be pinned in composer.lock.
-- [ ] MySQL version and collation fixed.
-- [ ] Migrations, factories, seeders, policies, repository contracts and service tests planned.
+- [x] Remaining technical gates closed: MySQL release (8.0.44), package version (Laravel 12, Spatie Permission 6.25, Livewire 3.8), email normalization, branch access semantics.
+- [x] `05_CORE_MASTER_DATA_DETAILED_DESIGN.md` reviewed and implemented.
+- [x] `06_CORE_MASTER_DATA_ERD.md` reviewed.
+- [x] RBAC package direction fixed: Spatie Permission Teams with company as team context; exact compatible version pinned in composer.lock.
+- [x] MySQL version (8.0.44) and collation (utf8mb4_unicode_ci) fixed and verified.
+- [x] Migrations, factories, seeders, policies, repository contracts and service tests planned.
+- [x] Core migrations (Batches 1-6, 28 tables) executed and verified in MySQL.
+- [x] Core seeders populated and verified (`11_CORE_MASTER_DATA_SEED_SPECIFICATION.md`).
