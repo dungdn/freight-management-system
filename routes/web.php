@@ -73,7 +73,9 @@ Route::prefix('accounting')->name('accounting.')->group(function () use ($fmsMod
 
 // 3. Master Data & System
 Route::prefix('master')->name('master.')->group(function () use ($fmsModule) {
-    Route::get('/partners', $fmsModule('Business Partners Directory', 'Shippers, Consignees, Shipping Lines, Airlines, Co-loaders, and Overseas Agents.', ['business_partners', 'partner_roles', 'partner_contacts', 'partner_addresses']))->name('partners');
+    Route::get('/partners', function () {
+        return view('pages.master.partners.index', ['title' => 'Business Partners Directory']);
+    })->name('partners');
     Route::get('/credit-profiles', $fmsModule('Partner Credit Profiles', 'Credit limits, payment terms, currency restrictions, and risk status.', ['partner_credit_profiles', 'payment_terms', 'currencies']))->name('credit-profiles');
     Route::get('/sales-assignments', $fmsModule('Partner Sales Assignments', 'Assign account executives and commission splits per business partner.', ['partner_sales_assignments', 'users']))->name('sales-assignments');
     Route::get('/ports-airports', $fmsModule('Ports & Airports Directory', 'UN/LOCODE seaports, IATA/ICAO airports, country codes, and customs locations.', ['ports', 'airports', 'countries', 'locations']))->name('ports-airports');
