@@ -36,7 +36,7 @@ Route::prefix('sales')->name('sales.')->group(function () use ($fmsModule) {
 
 // Freight Operations
 Route::prefix('operations')->name('operations.')->group(function () use ($fmsModule) {
-    Route::get('/shipments', $fmsModule('Freight Shipments (Jobs)', 'Central operational workbench managing active Ocean, Air, and Land freight jobs.', ['service_types', 'transport_modes', 'ports', 'airports', 'numbering_sequences']))->name('shipments');
+    Route::get('/shipments', fn () => view('pages.operations.shipments.index', ['title' => 'Freight Shipments (Jobs)']))->name('shipments');
     Route::get('/bookings', $fmsModule('Carrier Bookings', 'Carrier booking requests, confirmations, allocations, and empty equipment pick-up.', ['business_partners', 'container_types', 'numbering_sequences']))->name('bookings');
     Route::get('/ocean-export', $fmsModule('Ocean Export FCL', 'Full Container Load export management, container stuffing, and shipping instructions.', ['ports', 'container_types', 'service_types']))->name('ocean-export');
     Route::get('/ocean-import', $fmsModule('Ocean Import FCL', 'Inbound Ocean shipments, vessel tracking, container demurrage/detention, and release.', ['ports', 'container_types', 'locations']))->name('ocean-import');

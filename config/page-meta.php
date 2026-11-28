@@ -81,4 +81,8 @@ return [
         'title' => 'Freight Quotations & Sales Orders | Cargo FMS',
         'description' => 'Generate multi-currency freight quotations and convert directly into Sales Orders and Shipments.',
     ],
+    '/operations/shipments' => [
+        'title' => 'Freight Operations Workbench (Jobs) | Cargo FMS',
+        'description' => 'Operational freight job workbench tracking ocean, air, and road consignments, routing, and milestones.',
+    ],
 ];

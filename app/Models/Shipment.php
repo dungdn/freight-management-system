@@ -7,6 +7,7 @@ use App\Models\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Shipment extends Model
@@ -95,5 +96,26 @@ class Shipment extends Model
     public function parties(): HasMany
     {
         return $this->hasMany(ShipmentParty::class, 'shipment_id');
+    }
+
+    public function cargoItems(): HasMany
+    {
+        return $this->hasMany(ShipmentCargoItem::class, 'shipment_id');
+    }
+
+    public function legs(): HasMany
+    {
+        return $this->hasMany(ShipmentLeg::class, 'shipment_id')->orderBy('leg_sequence');
+    }
+
+    public function events(): HasMany
+    {
+        return $this->hasMany(ShipmentEvent::class, 'shipment_id')->latest('id');
+    }
+
+    public function bookings(): BelongsToMany
+    {
+        return $this->belongsToMany(Booking::class, 'booking_shipment_links', 'shipment_id', 'booking_id')
+            ->withPivot('linked_at');
     }
 }
